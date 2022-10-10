@@ -99,7 +99,7 @@ OpenFontRender::OpenFontRender() {
 	_drawPixel = [](int x, int y, int c) {
 		static bool flag = true;
 		if (flag) {
-			Serial.println("** [Warning] Please set drawPixel() using setDrawPixel(). **");
+			//printf("** [Warning] Please set drawPixel() using setDrawPixel(). **");
 			flag = false;
 		}
 		return;
@@ -421,23 +421,14 @@ uint16_t OpenFontRender::printf(const char *fmt, ...) {
 	return drawString(str, _cursor.x, _cursor.y, _font.fg_color, _font.bg_color);
 }
 
-void OpenFontRender::showFreeTypeVersion(Print &output) {
-	String str = "FreeType version: ";
-	str += String(FREETYPE_MAJOR) + ".";
-	str += String(FREETYPE_MINOR) + ".";
-	str += String(FREETYPE_PATCH) + "\n";
-
-	output.print(str.c_str());
+void OpenFontRender::showFreeTypeVersion() {
+	printf("FreeType version: %d.%d.%d\n", FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 }
 
-void OpenFontRender::showCredit(Print &output) {
-	String str = "Portions of this software are copyright © < ";
-	str += String(FREETYPE_MAJOR) + ".";
-	str += String(FREETYPE_MINOR) + ".";
-	str += String(FREETYPE_PATCH) + " ";
-	str += "> The FreeTypeProject (www.freetype.org).  All rights reserved.\n";
-
-	output.print(str.c_str());
+void OpenFontRender::showCredit() {
+	printf("Portions of this software are copyright\n");
+	printf(" © The FreeTypeProject (www.freetype.org).  All rights reserved.\n");
+	printf("FreeType version: %d.%d.%d\n", FREETYPE_MAJOR, FREETYPE_MINOR, FREETYPE_PATCH);
 }
 
 void OpenFontRender::setDebugLevel(uint8_t level) {
@@ -536,7 +527,7 @@ uint16_t OpenFontRender::alphaBlend(uint8_t alpha, uint16_t fgc, uint16_t bgc) {
 /*_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_//_/_/_/_/_/_/_/_/_/*/
 
 FT_Error ftc_face_requester(FTC_FaceID face_id, FT_Library library, FT_Pointer request_data, FT_Face *face) {
-	FT_Error error;
+	FT_Error error = false;
 	FontDataInfo *info = (FontDataInfo *)request_data;
 
 	debugPrintf((info->debug_level & OFR_INFO), "Font load required. FaceId: %d\n", face_id);
@@ -578,8 +569,8 @@ void debugPrintf(uint8_t level, const char *fmt, ...) {
 		vsnprintf(str, 256, fmt, ap);
 		va_end(ap);
 
-		Serial.print("[OFR ERROR] ");
-		Serial.print(str);
+		printf("[OFR ERROR] %s\n", str);
+		//Serial.print(str);
 		return;
 	}
 	case OFR_INFO: {
@@ -587,8 +578,7 @@ void debugPrintf(uint8_t level, const char *fmt, ...) {
 		vsnprintf(str, 256, fmt, ap);
 		va_end(ap);
 
-		Serial.print("[OFR INFO] ");
-		Serial.print(str);
+		printf("[OFR ERROR] %s\n", str);
 		return;
 	}
 	case OFR_DEBUG: {
@@ -596,8 +586,7 @@ void debugPrintf(uint8_t level, const char *fmt, ...) {
 		vsnprintf(str, 256, fmt, ap);
 		va_end(ap);
 
-		Serial.print("[OFR DEBUG] ");
-		Serial.print(str);
+		printf("[OFR DEBUG] %s\n", str);
 		return;
 	}
 	case OFR_RAW: {
@@ -605,7 +594,7 @@ void debugPrintf(uint8_t level, const char *fmt, ...) {
 		vsnprintf(str, 256, fmt, ap);
 		va_end(ap);
 
-		Serial.print(str);
+		printf("%s\n" ,str);
 		return;
 	}
 	default:

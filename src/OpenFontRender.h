@@ -10,8 +10,12 @@
 
 #ifndef OPEN_FONT_RENDER_H
 #define OPEN_FONT_RENDER_H
+// ESP-IDF users, just add this in main CMakeLists to avoid including Arduino.h:
+// idf_build_set_property(COMPILE_OPTIONS "-D __LINUX__" APPEND)
+#ifndef __LINUX__
+  #include <Arduino.h>
+#endif
 
-#include <Arduino.h>
 #include <stdarg.h>
 #include <stdio.h>
 
@@ -85,8 +89,8 @@ public:
 
 	uint16_t printf(const char *fmt, ...);
 
-	void showFreeTypeVersion(Print &output = Serial);
-	void showCredit(Print &output = Serial);
+	void showFreeTypeVersion();
+	void showCredit();
 	void setDebugLevel(uint8_t level);
 
 	template <typename T>
