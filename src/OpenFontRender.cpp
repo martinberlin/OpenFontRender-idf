@@ -275,7 +275,7 @@ uint16_t OpenFontRender::drawHString(const char *str,
 	image_type.flags   = FT_LOAD_DEFAULT;
 
 	// decode UTF8
-	uint16_t unicode;
+	uint16_t unicode = 0;
 	std::queue<FT_UInt32> unicode_q;
 	{
 		uint16_t len = (uint16_t)strlen(str);
